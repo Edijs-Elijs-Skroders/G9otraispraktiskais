@@ -1,17 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {Navigation}
+import { NavigationContainer} from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack'
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Hello World from Group 9 : Edijs Elijs Skroders! </Text>
-      <Text>This is my Edijs Elijs Skroders' first React Native application!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen
+      name = "Home"
+      component={HomeScreen}
+      options={{ title: 'Sveicināti'}}
+      />
+      <Stack.Screen name = "Profile" component = {ProfileScreen} />
+    </Stack.Navigator>
+  </NavigationContainer>
   );
 }
+const HomeScreen = ({ navigation }) => {
+  return (
+    <Button
+      title="Go to Jane's profile"
+      onPress={() =>
+        navigation.navigate('Profile', { name: 'Jane' })
+      }
+    />
+  );
+};
+const ProfileScreen = () => {
+  return <Text>This is Jane's profile</Text>;
+};
 
 const styles = StyleSheet.create({
   container: {
