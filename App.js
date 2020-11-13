@@ -1,44 +1,48 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 
-const Stack = createStackNavigator();
-
-export default function App() {
+function HomeScreen({navigation}) {
   return (
-    <NavigationContainer>
-    <Stack.Navigator>
-      <Stack.Screen
-      name = "Home"
-      component={HomeScreen}
-      options={{ title: 'Sveicināti'}}
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'top' }}>
+      <Text>Home Screen</Text>  
+      <Button 
+      title= "Apskatīt laika ziņas"
+      onPress={() => navigation.navigate('Laika ziņas')} 
       />
-      <Stack.Screen name = "Profile" component = {ProfileScreen} />
-    </Stack.Navigator>
-  </NavigationContainer>
+    </View>
   );
 }
-const HomeScreen = ({ navigation }) => {
-  return (
-    <Button
-      title="Go to Jane's profile"
-      onPress={() =>
-        navigation.navigate('Profile', { name: 'Jane' })
-      }
-    />
-  );
-};
-const ProfileScreen = () => {
-  return <Text>This is Jane's profile</Text>;
-};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function laikaZinasScreen({navigation}) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'top' }}>
+      <Text>Laika ziņas</Text>
+      <Button
+      title = "Atgriezties uz sākumu"
+      onPress={() => navigation.navigate('Home')}
+      />
+    </View>
+  );
+}
+
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" 
+        component={HomeScreen} 
+        options = {{title: 'Sveicināti'}}/>
+        <Stack.Screen name = "Laika ziņas"
+        component = {laikaZinasScreen}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
