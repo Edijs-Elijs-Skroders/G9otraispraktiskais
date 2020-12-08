@@ -19,6 +19,9 @@ function App() {
   );
 }
 
+//test
+
+
 function HomeScreen({navigation}) {
   const [count, setCount] = useState(0);
   return (
