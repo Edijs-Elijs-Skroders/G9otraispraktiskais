@@ -1,9 +1,10 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
-import { TouchableOpacity, Button, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { FlatList } from 'react-native';
+
+
 
 function App() {
   return (
@@ -12,15 +13,12 @@ function App() {
         <Stack.Screen name="Home" 
           component={HomeScreen} 
           options = {{title: 'DAG'}}/>
-        <Stack.Screen name = "Laika ziņas"
+        <Stack.Screen name = "Ziņas"
           component = {laikaZinasScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-//test
-
 
 function HomeScreen({navigation}) {
   const [count, setCount] = useState(0);
@@ -28,8 +26,8 @@ function HomeScreen({navigation}) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'top' }}>
       <Text>Home Screen</Text>  
       <Button 
-        title = "Apskatīt laika ziņas"
-        onPress={() => navigation.navigate('Laika ziņas')} 
+        title = "Apskatīt ziņas"
+        onPress={() => navigation.navigate('Ziņas')} 
       />
       <Text>Summa ir {count}</Text>
       <Button
@@ -44,20 +42,47 @@ function HomeScreen({navigation}) {
   );
 }
 
-function laikaZinasScreen({navigation}) {
+function laikaZinasScreen({ navigation }) {
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch('https://newsapi.org/v2/top-headlines?country=lv&apiKey=c5baacfcc6684a6aaeacd289d4bf00e3')
+            .then((response) => response.json())
+            .then((json) => setData(json.items))
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(false));
+    }, []);
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'top' }}>
-      <Text>Laika ziņas</Text>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'top' }}>
+          <Text>Ziņas</Text>
+          {isLoading ? <ActivityIndicator /> : (
+              <FlatList
+                  data={data}
+                  keyExtractor={({ id }, index) => id}
+                  renderItem={({ item }) => (
+                      <View>
+                          <Text>{item.title}, {item.country}</Text>
+                          <Text>{item.alt_title}</Text>
+                          <Text>{item.note}</Text>
+                      </View>
+                  )}
+              />
+          )}
+      
+      <FlatListBasics></FlatListBasics>
       <Button
       title = "Atgriezties uz sākumu"
       onPress={() => navigation.navigate('Home')}
       />
-      <FlatListBasics></FlatListBasics>
+      
     </View>
   );
 }
 
 const Stack = createStackNavigator();
+
 
 const FlatListBasics = () => {
   return (
